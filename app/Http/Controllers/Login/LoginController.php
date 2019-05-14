@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Model\UserModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Redis;
 class LoginController    extends Controller
 {
     /**
@@ -13,7 +14,7 @@ class LoginController    extends Controller
     public function login(){
 //        header("Access-Control-Allow-Origin: *");
 
-        $callback = $_GET["email"];
+      /*  $callback = $_GET["email"];
         $a = array(
             'code'=>'CA1998',
             'price'=>'6000',
@@ -21,7 +22,7 @@ class LoginController    extends Controller
             'func'=>$callback,
         );
         $result = json_encode($a);
-        echo "person($result)";die;
+        echo "person($result)";die;*/
         //解密
         $data = file_get_contents('php://input');
         $enc_data=base64_decode($data);
@@ -42,8 +43,8 @@ class LoginController    extends Controller
                 $redis_token_key = 'login_token:id:'.$info_table->id;
                 Redis::set($redis_token_key,$token);
                 Redis::expire($redis_token_key,604800);
-                setcookie('token',Str::random(6),time()+50,'/','api.com',false,true);
-                setcookie('id',999,time()+50,'/','api.com',false,true);
+                setcookie('token',Str::random(6),time()+50,'/','client.myloser.club',false,true);
+                setcookie('id',999,time()+50,'/','client.myloser.club',false,true);
                 $res=[
                     'error'=>0,
                     'msg'=>'登陆成功',
