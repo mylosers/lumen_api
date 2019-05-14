@@ -40,11 +40,11 @@ class LoginController    extends Controller
                 Redis::setex($key,3600,$token.','.$uid->id);
                 $val=Redis::get($key); //查询key值中的val值
                 $arr=explode(',',$val); //根据，切割字符串为数组 explode*/
-                $redis_token_key = 'login_token:id:'.$info_table->id;
+                $redis_token_key = 'login_token';
                 Redis::set($redis_token_key,$token);
                 Redis::expire($redis_token_key,604800);
-                setcookie('token',Str::random(6),time()+50,'/','client.myloser.club',false,true);
-                setcookie('id',999,time()+50,'/','client.myloser.club',false,true);
+                /*setcookie('token',Str::random(6),time()+50,'/','client.myloser.club',false,true);
+                setcookie('id',999,time()+50,'/','client.myloser.club',false,true);*/
                 $res=[
                     'error'=>0,
                     'msg'=>'登陆成功',
