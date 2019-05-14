@@ -14,3 +14,9 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->post('/foo','base\baseController@base' );
+$router->post('/rsaNo','base\baseController@rsaNo');
+$router->post('/sign','base\baseController@sign');
+$router->post('/request','Login\RequestController@request');//注册
+$router->get('/login','Login\LoginController@login');//注册
