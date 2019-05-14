@@ -14,7 +14,7 @@ class RequestController    extends Controller
         //解密
         $data = file_get_contents('php://input');
         $enc_data=base64_decode($data);
-        $pk=openssl_get_publickey('file://'.storage_path('app/keys/public.pem'));
+        $pk=openssl_get_publickey('file://keys/public.pem');
         openssl_public_decrypt($enc_data,$dec_data,$pk);
         $data=json_decode($dec_data,true);
         $data=[
