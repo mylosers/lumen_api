@@ -84,7 +84,7 @@ class LoginController    extends Controller
      */
     public function loginTwo()
     {
-        header("Access-Control-Allow-Origin: *");
+//        header("Access-Control-Allow-Origin: *");
         $email = $_POST['email'];
         $pwd = $_POST['pwd'];
         if ($email == "") {
@@ -100,6 +100,20 @@ class LoginController    extends Controller
             ];
             die(json_encode($res, JSON_UNESCAPED_UNICODE));
         }
+
+        $url = 'http://api.myloser.club/login';
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS,$b64);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Conten-Type:text/plain']);
+        $info=curl_exec($curl);
+        $error=curl_errno($curl);
+        if($error>0){
+            echo "CURL 错误码：".$error;exit;
+        }
+        curl_close($curl);
+
         $info_table = DB::table('user')->where(['email' => $email])->first();
         if ($info_table) {
             //TODO 登陆逻辑
@@ -141,5 +155,11 @@ class LoginController    extends Controller
             ];
             die(json_encode($res, JSON_UNESCAPED_UNICODE));
         }
+    }
+
+    public function check(){
+//        $redis_token_key = 'login_token;id:16';
+//        $token=Redis::get($redis_token_key);
+//        dd($token);
     }
 }

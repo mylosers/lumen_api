@@ -18,6 +18,10 @@ $router->get('/', function () use ($router) {
 $router->post('/foo','base\baseController@base' );
 $router->post('/rsaNo','base\baseController@rsaNo');
 $router->post('/sign','base\baseController@sign');
-$router->post('/request','Login\RequestController@request');//注册
-$router->post('/login','Login\LoginController@login');//注册
-$router->post('/loginTwo','Login\LoginController@loginTwo');//注册
+$router->post('/request','Login\RequestController@request');
+$router->post('/requestAdd','Login\RequestController@requestAdd');//注册
+$router->post('/login','Login\LoginController@login');
+$router->post('/loginTwo','Login\LoginController@loginTwo');
+$router->get('center', ['middleware' => 'login', function () {
+    'LoginController@center';
+}]);

@@ -15,6 +15,11 @@ class ExampleMiddleware
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+        if($request->isMethod('OPTIONS')){
+            $request=request('');
+        }else{
+            $request=$next($request);
+        }
+        return $request;
     }
 }
