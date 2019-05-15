@@ -20,8 +20,12 @@ $router->post('/rsaNo','base\baseController@rsaNo');
 $router->post('/sign','base\baseController@sign');
 $router->post('/request','Login\RequestController@request');
 $router->post('/requestAdd','Login\RequestController@requestAdd');//注册
+//$router->post('/requestAdd',function(){
+//    return 123;
+//});//注册
 $router->post('/login','Login\LoginController@login');
 $router->post('/loginTwo','Login\LoginController@loginTwo');
+$router->post('/loginAdd','Login\LoginController@loginAdd');
 $router->get('center', ['middleware' => 'login', function () {
     'LoginController@center';
 }]);

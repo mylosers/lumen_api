@@ -162,4 +162,39 @@ class LoginController    extends Controller
 //        $token=Redis::get($redis_token_key);
 //        dd($token);
     }
+
+    /**
+     * 登陆api接口
+     */
+    public function loginAdd(){
+        $email=$_POST['email'];
+        $pwd=$_POST['pwd'];
+        $data=[
+            'email'=>$email,
+            'pwd'=>$pwd
+        ];
+        $json_str=json_encode($data,256);
+        $url = 'http://vm.client.cn/loginInfo';
+        //初始化URL
+        $ch = curl_init();
+        //设置抓取的url
+        curl_setopt($ch, CURLOPT_URL, $url);
+        //设置post方式提交
+        curl_setopt($ch, CURLOPT_POST, 1);
+        //传值
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_str);
+        //返回结果不输入
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        //响应头
+        curl_setopt($ch,CURLOPT_HTTPHEADER,['Content-type:text/plain']);
+        //获取抛出错误
+        $num=curl_errno($ch);
+        if($num>0){
+            echo 'curl错误码：'.$num;exit;
+        }
+        //发起请求
+        curl_exec($ch);
+        //关闭并释放资源
+        curl_close($ch);
+    }
 }

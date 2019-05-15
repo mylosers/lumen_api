@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Login;
 use App\Http\Controllers\Controller;
-use App\Model\UserModel;
-use Illuminate\Support\Facades\DB;
 
 class RequestController    extends Controller
 {
     /**
      * 注册
      */
-    public function request(){
+    /*public function request(){
         //解密
         $data = file_get_contents('php://input');
         $enc_data=base64_decode($data);
@@ -36,7 +34,7 @@ class RequestController    extends Controller
             ];
         }
         return json_encode($res,JSON_UNESCAPED_UNICODE);
-    }
+    }*/
 
     /**
      * api注册接口
@@ -45,35 +43,39 @@ class RequestController    extends Controller
         $name=$_POST['name'];
         $email=$_POST['email'];
         $pwd=$_POST['pwd'];
-        if($name==""||$email==""||$pwd==""){
-            $res=[
-                'error'=>50001,
-                'msg'=>'数据不能为空',
-            ];
-            return json_encode($res,JSON_UNESCAPED_UNICODE);
-        }
         $data=[
             'name'=>$name,
             'email'=>$email,
             'pwd'=>$pwd
         ];
         //加密
-        $json_str=json_encode($data);
-        $k=openssl_pkey_get_private('file://keys/private.pem');
-        //加密
-        openssl_private_encrypt($json_str,$enc_data,$k);
-        $b64=base64_encode($enc_data);
+        $json_str=json_encode($data,256);
+//        $k=openssl_pkey_get_private('file://keys/private.pem');
+//        //加密
+//        openssl_private_encrypt($json_str,$enc_data,$k);
+//        $b64=base64_encode($enc_data);
         $url = 'http://vm.client.cn/requestInfo';
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS,$b64);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Conten-Type:text/plain']);
-        curl_exec($curl);
-        $error=curl_errno($curl);
-        if($error>0){
-            echo "CURL 错误码：".$error;exit;
+        //初始化URL
+        $ch = curl_init();
+        //设置抓取的url
+        curl_setopt($ch, CURLOPT_URL, $url);
+        //设置post方式提交
+        curl_setopt($ch, CURLOPT_POST, 1);
+        //传值
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_str);
+        //返回结果不输入
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        //响应头
+        curl_setopt($ch,CURLOPT_HTTPHEADER,['Content-type:text/plain']);
+        //获取抛出错误
+        $num=curl_errno($ch);
+        if($num>0){
+            echo 'curl错误码：'.$num;exit;
         }
-        curl_close($curl);
+        //发起请求
+        curl_exec($ch);
+        //关闭并释放资源
+        curl_close($ch);
+
     }
 }
