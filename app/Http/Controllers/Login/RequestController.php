@@ -54,7 +54,7 @@ class RequestController    extends Controller
 //        //加密
 //        openssl_private_encrypt($json_str,$enc_data,$k);
 //        $b64=base64_encode($enc_data);
-        $url = 'http://vm.client.cn/requestInfo';
+        $url = 'http://client.myloser.club/requestInfo';
         //初始化URL
         $ch = curl_init();
         //设置抓取的url

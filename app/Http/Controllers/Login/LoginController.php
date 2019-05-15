@@ -174,7 +174,7 @@ class LoginController    extends Controller
             'pwd'=>$pwd
         ];
         $json_str=json_encode($data,256);
-        $url = 'http://vm.client.cn/loginInfo';
+        $url = 'http://client.myloser.club/loginInfo';
         //初始化URL
         $ch = curl_init();
         //设置抓取的url
