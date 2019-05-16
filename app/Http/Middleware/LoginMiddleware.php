@@ -26,6 +26,8 @@ class LoginMiddleware
                 'msg' => '请先登陆'
             ];
             die(json_encode($res, JSON_UNESCAPED_UNICODE));
+        }else{
+
         }
         return $next($request);
     }

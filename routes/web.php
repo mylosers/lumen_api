@@ -26,6 +26,10 @@ $router->post('/requestAdd','Login\RequestController@requestAdd');//注册
 $router->post('/login','Login\LoginController@login');
 $router->post('/loginTwo','Login\LoginController@loginTwo');
 $router->post('/loginAdd','Login\LoginController@loginAdd');
-$router->get('center', ['middleware' => 'login', function () {
-    'LoginController@center';
-}]);
+/*$router->get('center', ['middleware' => 'login', function () use ($router) {
+    'Login/LoginController@center';
+}]);*/
+
+$router->group(['middleware' => 'login'], function () use ($router) {
+    $router->get('/center','Login\LoginController@check');
+});

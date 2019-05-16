@@ -82,83 +82,87 @@ class LoginController    extends Controller
     /**
      * 登陆2
      */
-    public function loginTwo()
-    {
-//        header("Access-Control-Allow-Origin: *");
-        $email = $_POST['email'];
-        $pwd = $_POST['pwd'];
-        if ($email == "") {
-            $res = [
-                'error' => 50004,
-                'msg' => '用户名必填'
-            ];
-            die(json_encode($res, JSON_UNESCAPED_UNICODE));
-        } else if ($pwd == "") {
-            $res = [
-                'error' => 50003,
-                'msg' => '密码必填'
-            ];
-            die(json_encode($res, JSON_UNESCAPED_UNICODE));
-        }
-
-        $url = 'http://api.myloser.club/login';
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS,$b64);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Conten-Type:text/plain']);
-        $info=curl_exec($curl);
-        $error=curl_errno($curl);
-        if($error>0){
-            echo "CURL 错误码：".$error;exit;
-        }
-        curl_close($curl);
-
-        $info_table = DB::table('user')->where(['email' => $email])->first();
-        if ($info_table) {
-            //TODO 登陆逻辑
-            //判断密码是否正确
-            $info = password_verify($pwd, $info_table->pwd);
-            if ($info == true) {
-                $token = $this->token($info_table->id);//生成token
-                /*$key='login_token';
-                Redis::setex($key,3600,$token.','.$uid->id);
-                $val=Redis::get($key); //查询key值中的val值
-                $arr=explode(',',$val); //根据，切割字符串为数组 explode*/
-                $redis_token_key = 'login_token;id:'.$info_table->id;
-                Redis::set($redis_token_key, $token);
-                Redis::expire($redis_token_key, 604800);
-                /*setcookie('token',Str::random(6),time()+50,'/','client.myloser.club',false,true);
-                setcookie('id',999,time()+50,'/','client.myloser.club',false,true);*/
-                $res = [
-                    'error' => 0,
-                    'msg' => '登陆成功',
-                    'data' => [
-                        'token' => $token,
-                        'id'=>$info_table->id
-                    ]
-                ];
-                die(json_encode($res, JSON_UNESCAPED_UNICODE));
-            }else {
-                //密码不正确
-                $res = [
-                    'error' => 50005,
-                    'msg' => '密码不正确'
-                ];
-                die(json_encode($res, JSON_UNESCAPED_UNICODE));
-            }
-        } else {
-            //查无此人
-            $res = [
-                'error' => 50004,
-                'msg' => '没有此用户'
-            ];
-            die(json_encode($res, JSON_UNESCAPED_UNICODE));
-        }
-    }
+//    public function loginTwo()
+//    {
+////        header("Access-Control-Allow-Origin: *");
+//        $email = $_POST['email'];
+//        $pwd = $_POST['pwd'];
+//        if ($email == "") {
+//            $res = [
+//                'error' => 50004,
+//                'msg' => '用户名必填'
+//            ];
+//            die(json_encode($res, JSON_UNESCAPED_UNICODE));
+//        } else if ($pwd == "") {
+//            $res = [
+//                'error' => 50003,
+//                'msg' => '密码必填'
+//            ];
+//            die(json_encode($res, JSON_UNESCAPED_UNICODE));
+//        }
+//
+//        $url = 'http://api.myloser.club/login';
+//        $curl = curl_init();
+//        curl_setopt($curl, CURLOPT_URL, $url);
+//        curl_setopt($curl, CURLOPT_POST, 1);
+//        curl_setopt($curl, CURLOPT_POSTFIELDS,$b64);
+//        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Conten-Type:text/plain']);
+//        $info=curl_exec($curl);
+//        $error=curl_errno($curl);
+//        if($error>0){
+//            echo "CURL 错误码：".$error;exit;
+//        }
+//        curl_close($curl);
+//
+//        $info_table = DB::table('user')->where(['email' => $email])->first();
+//        if ($info_table) {
+//            //TODO 登陆逻辑
+//            //判断密码是否正确
+//            $info = password_verify($pwd, $info_table->pwd);
+//            if ($info == true) {
+//                $token = $this->token($info_table->id);//生成token
+//                /*$key='login_token';
+//                Redis::setex($key,3600,$token.','.$uid->id);
+//                $val=Redis::get($key); //查询key值中的val值
+//                $arr=explode(',',$val); //根据，切割字符串为数组 explode*/
+//                $redis_token_key = 'login_token;id:'.$info_table->id;
+//                Redis::set($redis_token_key, $token);
+//                Redis::expire($redis_token_key, 604800);
+//                /*setcookie('token',Str::random(6),time()+50,'/','client.myloser.club',false,true);
+//                setcookie('id',999,time()+50,'/','client.myloser.club',false,true);*/
+//                $res = [
+//                    'error' => 0,
+//                    'msg' => '登陆成功',
+//                    'data' => [
+//                        'token' => $token,
+//                        'id'=>$info_table->id
+//                    ]
+//                ];
+//                die(json_encode($res, JSON_UNESCAPED_UNICODE));
+//            }else {
+//                //密码不正确
+//                $res = [
+//                    'error' => 50005,
+//                    'msg' => '密码不正确'
+//                ];
+//                die(json_encode($res, JSON_UNESCAPED_UNICODE));
+//            }
+//        } else {
+//            //查无此人
+//            $res = [
+//                'error' => 50004,
+//                'msg' => '没有此用户'
+//            ];
+//            die(json_encode($res, JSON_UNESCAPED_UNICODE));
+//        }
+//    }
 
     public function check(){
-        echo 1;
+        $res = [
+            'error' => 0,
+            'msg' => '成功'
+        ];
+        die(json_encode($res, JSON_UNESCAPED_UNICODE));
     }
 
     /**
@@ -172,7 +176,8 @@ class LoginController    extends Controller
             'pwd'=>$pwd
         ];
         $json_str=json_encode($data,256);
-        $url = 'http://client.myloser.club/loginInfo';
+        $url = 'http://client.myloser.club/loginInfo'; //线上
+//        $url = 'http://vm.client.cn/loginInfo'; //本地
         //初始化URL
         $ch = curl_init();
         //设置抓取的url
