@@ -158,9 +158,7 @@ class LoginController    extends Controller
     }
 
     public function check(){
-//        $redis_token_key = 'login_token;id:16';
-//        $token=Redis::get($redis_token_key);
-//        dd($token);
+        echo 1;
     }
 
     /**
